@@ -44,6 +44,7 @@ error handling in my code, is based on errors found in class, feature, let bindi
 we know the parser should be recovered after detecting them, so in most parts we left the action part empty ({}).
 if we see error, the parser will tell us the line, automatically.
 now we have all the tokens from the lexer, our assignment is to build a tree using them and detect the correct and false grammer.
+
 ///////////////////////////////////////////
 output of bad.cl
 ///////////////////////////////////////////
