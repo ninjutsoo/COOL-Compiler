@@ -67,75 +67,119 @@ output of bad.cl
 ### semantic analyzer
 
 #### Why_Semantic_Analysis :
-	Semantic analysis is the task of ensuring that the declarations and statements of a program are semantically correct, i.e,
- 	that their meaning is clear and consistent with the way in which control structures and data types are supposed to be used.
+Semantic analysis is the task of ensuring that the declarations and statements of a program are semantically correct, i.e,
+that their meaning is clear and consistent with the way in which control structures and data types are supposed to be used.
 
 #### Main_Purpose:
-	1: Type inferring:
-		going into AST and find the nodes and inferr the proper type to them, and then build up the type for parent nodes,
-		(it's called bottom_up algorithm)
-	2: Type checking:
-		it's the same algorithm (bottom_up algorithm), because each type for example for expression "e" is from the types of its
-		subexpressions.
+1: Type inferring:
+	going into AST and find the nodes and inferr the proper type to them, and then build up the type for parent nodes,
+	(it's called bottom_up algorithm)
+2: Type checking:
+	it's the same algorithm (bottom_up algorithm), because each type for example for expression "e" is from the types of its
+	subexpressions.
 
 #### Code_Sections:
-	Install basic classes:
-		it was handled by default and is including Object_class, IO_class, Int_class, Bool_class, Str_class.
-	Install classes:
-		at the top of the code we defined a map(dictionary) for saving Classes by their name, named classTable.
-		while we add them, also we look for Redefinition of self type, Redefinition of a class and inheritance from Int, Str, 
-		Bool, SELF_TYPE.
-	Install methods:
-		like classes (classTable), we define methodTable to collect all the attributes of a class by the name of class as the key.
-		we also check for method multiple definition.
-	Get inheritance:
-		we have 2 function in this name for returning the chain of ancestors of an class (from class to object).
-		one will start searching with the name of class and one with the class.
-	Conform
-		this is used to show if one type is subtype of another type, or not. if we find type2 in inheritance chain of type1, so
-		type1 is subtype of type2.
-	LCA
-		it's called LeastCommonAncestor, and like the name it is used to find the least common ancestor(i couldn't find a better 
-		way to describe that :)). it is mostly used in COND and TYPECASE.
-	Check inheritance
-		in this part we go through each class's ancestors to find if they're inherited from a non-existed parent or we have CYCLE.
-		what we mean by that is that it should be a TREE and so a DAG, and we should show an error if we find a class in it's parents.
-	Check main
-		to check whether we have class and attribute main defined.
-	Check methods
-		to check method scope and attribute scope and the rule for Redefinition. (as it's complicated for methods)
-	Method check_type
-		to check rules for "self" and the multiple definitoin of formal parameters and the type of return type.
-	Assign check_type
-		we have to find the type definition of identifier in it's or outer scoops using lookup at Environment.
-	Static_dispatch check_type
-		check the expression type and going through ancestors of T to find the method f and check for the conformation of types.
-		expression type should be subtype of method type. and also actual parameters of method should be the subtype of formal.
-	Dispatch check_type
-		almost like Static_dispatch but will start finding ancestors from type of expr.
-	Cond check_type
-		the pred should be in type bool and also the return type is lca of then_exp and else_exp.
-	TypeCase check_type
-		we should have distinct type definitions in cases, so we can use a vector to check that. and also the return type is lca 
-		of all those cases.
-	Branch_class check_type
-		as we enter a branch, we enter a new scope(like class, method, ...).
-	Let check_type
-		in that init_type should be subtype of type_decl.
-	Some arithmatic check_type
-		EASY.
-	Program_class
-		main part of our program, where we call other functions like install methods. and we finally check for errors if they're greater
-		than 0. to say "Compilation halted doe semantic errors.".
+Install basic classes:
+	it was handled by default and is including Object_class, IO_class, Int_class, Bool_class, Str_class.
+Install classes:
+	at the top of the code we defined a map(dictionary) for saving Classes by their name, named classTable.
+	while we add them, also we look for Redefinition of self type, Redefinition of a class and inheritance from Int, Str, 
+	Bool, SELF_TYPE.
+Install methods:
+	like classes (classTable), we define methodTable to collect all the attributes of a class by the name of class as the key.
+	we also check for method multiple definition.
+Get inheritance:
+	we have 2 function in this name for returning the chain of ancestors of an class (from class to object).
+	one will start searching with the name of class and one with the class.
+Conform
+	this is used to show if one type is subtype of another type, or not. if we find type2 in inheritance chain of type1, so
+	type1 is subtype of type2.
+LCA
+	it's called LeastCommonAncestor, and like the name it is used to find the least common ancestor(i couldn't find a better 
+	way to describe that :)). it is mostly used in COND and TYPECASE.
+Check inheritance
+	in this part we go through each class's ancestors to find if they're inherited from a non-existed parent or we have CYCLE.
+	what we mean by that is that it should be a TREE and so a DAG, and we should show an error if we find a class in it's parents.
+Check main
+	to check whether we have class and attribute main defined.
+Check methods
+	to check method scope and attribute scope and the rule for Redefinition. (as it's complicated for methods)
+Method check_type
+	to check rules for "self" and the multiple definitoin of formal parameters and the type of return type.
+Assign check_type
+	we have to find the type definition of identifier in it's or outer scoops using lookup at Environment.
+Static_dispatch check_type
+	check the expression type and going through ancestors of T to find the method f and check for the conformation of types.
+	expression type should be subtype of method type. and also actual parameters of method should be the subtype of formal.
+Dispatch check_type
+	almost like Static_dispatch but will start finding ancestors from type of expr.
+Cond check_type
+	the pred should be in type bool and also the return type is lca of then_exp and else_exp.
+TypeCase check_type
+	we should have distinct type definitions in cases, so we can use a vector to check that. and also the return type is lca 
+	of all those cases.
+Branch_class check_type
+	as we enter a branch, we enter a new scope(like class, method, ...).
+Let check_type
+	in that init_type should be subtype of type_decl.
+Some arithmatic check_type
+	EASY.
+Program_class
+	main part of our program, where we call other functions like install methods. and we finally check for errors if they're greater
+	than 0. to say "Compilation halted doe semantic errors.".
 
 #### Extra:
-	- all of the types are subtype of object, so when we have type error and we want to continue the program we define the type as object.
-	- we type check all of the program in a recursive way, as we build up the leafs.
+- all of the types are subtype of object, so when we have type error and we want to continue the program we define the type as object.
+- we type check all of the program in a recursive way, as we build up the leafs.
 
 #### About good.cl and bad.cl:
-	as we have done most of the errors (main ones), so some of them will go in shadow of others, so for better results, it's better to comment
-	all the errors and just use the part that we want to check.
+as we have done most of the errors (main ones), so some of them will go in shadow of others, so for better results, it's better to comment
+all the errors and just use the part that we want to check.
 
 #### Why Design is good:
-	we have multiple passes and in each pass we handle some of the errors, so in each step we know where we are and what we do. the design is 
-	compatible with structures in cool-tree.h and we used them alot. 
+we have multiple passes and in each pass we handle some of the errors, so in each step we know where we are and what we do. the design is 
+compatible with structures in cool-tree.h and we used them alot. 
+## Phase 5
+### code generation
+Code generation is the last and final phase of a compiler. The objective of this phase is to allocate storage and generate relocatable machine code. It also allocates memory locations for the variable. On previous phases, we've done pretty big processes based on some rules. Lexer with Regular expressions, Parser with Context free grammers and Semantic based on Typing rules. Now we want to do and explain Code generation with help of Operational Semantic to avoid complexity.
+For some basic forms we have Stack machine with accumulator.
+Accumulator: $a0: holds result of last expression evaluation. $s0 holds a stored copy of “self”. $sp points to next location in stack (so $sp+4 is the top of the stack) $t0, $t1, ... are temporary registers.
+
+#### Here we talk about some design decisions used in my code briefly
+
+1. First we decide to generate code for strings, ints and booleans.
+
+2. Start writing .data segment. The .data section is used to declare the memory region, where data elements are stored for the program. ( we also need tags in this part )
+
+3. Start writing .text segment. This defines an area in memory that stores the instruction codes. This is also a fixed area. ( also to define global variables )
+
+4. -code_preprocessing : We decide which class should get which tag, i.e., we let Object have tag 0, Int 2, Bool 3, Str 4, etc. The important invariant we must maintain in doing so is that, all of class A's offspring (children, grandchildren, etc) have a class tag greater than class A, and that non-ancestor has a class tag that's greater than A's, but less than any of A's ancestors.
+
+5. -code_nametab : it makes class_nameTab with some properties mentioned in cool-runtime.pdf
+
+6. -code_objTab : it makes class_objTab with some properties mentioned in cool-tuntime.pdf
+
+7. -code_dispatch : to make a table for methods
+
+8. We fill in the class object table, class dispatches sections, class prototypes sections, and object initializers as described in the runtime manual. For each of them, we simply iterate through the classes in order of their class tags and fill the appropiate sections. For fillign dispatch section for a given class, we recursivelly build off it's ancestors dispatch tables. Likewise for initializer sections.
+
+9. -code_methods, ... : we start class initialization and store FP and SELF and with RA we try to go through ancestors for checking methods, ... . we fill in the code for all the methods of all the classes (except of course object, int, str, boolean, and io). This is straight forward if looked at recursively. We begin each method with a label, pushing fp, s0, ra to the stack, copying the a0 (self) to s0, then recursively generating the code for the body, popping back off the fp, s0, and ra from the stack, then popping off the passed in arguments from the stack, and lastly add a return statement.
+
+#### for computing the code for the actual body expressions, the general idea based on operational semantic
+
+1. For +, -, /, * operators, we comute the each side expression, copy one of the integer objects that resulted, modify it's value to the result of the appropriate operation, and keep this resulting object in $a0.
+
+2. String, boolean, and int constants simply load the appropiate constant to $a0.
+
+#### the instruction of Activation Record for Cgen
+
+-	Return address
+-	Old frame pointer
+-	n arguments
+-	NT(e) temporary locations
+
+#### some data structures for this phase
+
+-	class_method_offset : to save method offset for each class
+-	class_attr_typeoffset : it saves both type and offset for each attribute
+-	<Symbol, int> objectsize : it saves both class names and their number of attributes
