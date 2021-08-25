@@ -2,6 +2,7 @@
 ## Phase 1
 #### These are 3 set of assignments meant to be an introduction to COOL programming language.
 ## Phase 2
+### lexer
 this was the lexer phase for cool compiler.
 lexer works az an scanner and tokenizer, that will recogonize each part.
 we will start with the my defenitions part, I have an boolean named wrong_str
@@ -31,6 +32,7 @@ we have two kind of comments, first, ((**)) second, (--). secod part is for stri
 we have some exceptions for (backslash) such as \n or \f or ..., but for \(other characters) we ignore \.
 after them we go for other patterns, most important one are objectid and typeid that the difference is at first index of them. every character that we didn't defined will show as an error.
 ## Phase 3
+### parser
 This was the parser phase for cool compiler. we wrote it with an cpp tool called bison.
 our assignment was to build an AST (abstract syntax tree), we will construct this AST using semantic actions of the parser generator. 
 Parser is a syntactic analysor, it will get the input and while making AST, it checks that it is correct or not. we tried to make the correct forms using terminals and nonterminals, our start point (node) was program and we go through classes, features, formals, expressions and so on.
@@ -61,14 +63,14 @@ output of bad.cl
 "bad.cl", line 52: syntax error at or near OBJECTID = inherts
 "bad.cl", line 57: syntax error at or near ';'
 ///////////////////////////////////////////
-## Phase 2
-###semantic analyzer
+## Phase 4
+### semantic analyzer
 
-####Why_Semantic_Analysis :
+#### Why_Semantic_Analysis :
 	Semantic analysis is the task of ensuring that the declarations and statements of a program are semantically correct, i.e,
  	that their meaning is clear and consistent with the way in which control structures and data types are supposed to be used.
 
-####Main_Purpose:
+#### Main_Purpose:
 	1: Type inferring:
 		going into AST and find the nodes and inferr the proper type to them, and then build up the type for parent nodes,
 		(it's called bottom_up algorithm)
@@ -76,7 +78,7 @@ output of bad.cl
 		it's the same algorithm (bottom_up algorithm), because each type for example for expression "e" is from the types of its
 		subexpressions.
 
-####Code_Sections:
+#### Code_Sections:
 	Install basic classes:
 		it was handled by default and is including Object_class, IO_class, Int_class, Bool_class, Str_class.
 	Install classes:
@@ -126,14 +128,14 @@ output of bad.cl
 		main part of our program, where we call other functions like install methods. and we finally check for errors if they're greater
 		than 0. to say "Compilation halted doe semantic errors.".
 
-####Extra:
+#### Extra:
 	- all of the types are subtype of object, so when we have type error and we want to continue the program we define the type as object.
 	- we type check all of the program in a recursive way, as we build up the leafs.
 
-####About good.cl and bad.cl:
+#### About good.cl and bad.cl:
 	as we have done most of the errors (main ones), so some of them will go in shadow of others, so for better results, it's better to comment
 	all the errors and just use the part that we want to check.
 
-####Why Design is good:
+#### Why Design is good:
 	we have multiple passes and in each pass we handle some of the errors, so in each step we know where we are and what we do. the design is 
 	compatible with structures in cool-tree.h and we used them alot. 
